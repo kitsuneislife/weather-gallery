@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Uma galeria de arte guiada pelo clima em tempo real." />
+    <meta name="color-scheme" content="light dark" />
+    <title>Galeria do Clima</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,0..100;1,9..144,300..700,0..100&family=Instrument+Sans:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2712%27 fill=%27%23f2c14e%27/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="styles.css" />
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
+        }
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script type="module" src="scene.js"></script>
+    <script src="sound.js" defer></script>
+    <script src="script.js" defer></script>
+  </head>
+
+  <body data-theme="rest">
+    <canvas id="sky" class="sky" aria-hidden="true"></canvas>
+
+    <a class="skip-link" href="#cityInput">Ir para a busca</a>
+
+    <header class="site-header">
+      <p class="brand">Galeria do Clima</p>
+      <div class="header-side">
+        <button id="soundToggle" class="sound" type="button" aria-pressed="false">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+            <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" />
+            <path class="sound-wave" d="M16 9a4 4 0 0 1 0 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+          </svg>
+          <span class="sound-label">Som</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="stage">
+      <section class="ask" aria-labelledby="search-title">
+        <h1 id="search-title" class="visually-hidden">Escolha uma cidade</h1>
+
+        <form id="searchForm" class="prompt" autocomplete="off" novalidate>
+          <label class="prompt-sentence" for="cityInput">
+            <span class="prompt-text">Uma obra para o céu de</span>
+            <span class="prompt-field">
+              <input
+                id="cityInput"
+                class="prompt-input"
+                name="city"
+                type="text"
+                placeholder="sua cidade"
+                spellcheck="false"
+                autocomplete="off"
+                role="combobox"
+                aria-autocomplete="list"
+                aria-expanded="false"
+                aria-controls="suggestions"
+                aria-haspopup="listbox"
+                required
+              />
+              <span id="cityMirror" class="prompt-mirror" aria-hidden="true">sua cidade</span>
+              <button id="searchButton" class="prompt-go" type="submit" aria-label="Buscar obra">
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                  <path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </span>
+          </label>
+
+          <ul id="suggestions" class="suggestions" role="listbox" aria-label="Cidades encontradas" hidden></ul>
+        </form>
+
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+        <p id="recent" class="recent" hidden></p>
+      </section>
+
+      <section id="results" class="results" hidden aria-live="polite">
+        <figure id="artworkPanel" class="artwork" hidden>
+          <div class="frame">
+            <img id="artworkImage" class="artwork-image" src="" alt="" decoding="async" />
+          </div>
+          <figcaption class="caption">
+            <h2 id="artworkTitle" class="caption-title"></h2>
+            <p id="artworkArtist" class="caption-artist"></p>
+            <p id="artworkDate" class="caption-date"></p>
+            <a id="artworkLink" class="caption-link" href="" target="_blank" rel="noreferrer">Ver no The Met</a>
+          </figcaption>
+        </figure>
+
+        <article class="weather" aria-labelledby="weatherTitle">
+          <h2 id="weatherTitle" class="weather-city"><span id="cityName"></span></h2>
+          <p id="localTime" class="weather-time"></p>
+
+          <p class="weather-temp">
+            <span id="temperature" class="weather-temp-value">0</span><span class="weather-temp-unit">°C</span>
+          </p>
+          <p id="weatherDescription" class="weather-desc"></p>
+          <p id="feelsLike" class="weather-feels"></p>
+
+          <dl class="weather-details">
+            <div>
+              <dt>Umidade</dt>
+              <dd id="humidity"></dd>
+            </div>
+            <div>
+              <dt>Precipitação</dt>
+              <dd id="precipitation"></dd>
+            </div>
+            <div>
+              <dt>Nuvens</dt>
+              <dd id="cloudCover"></dd>
+            </div>
+            <div>
+              <dt>Vento</dt>
+              <dd id="windSpeed"></dd>
+            </div>
+          </dl>
+          <p id="weatherTheme" class="visually-hidden"></p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Clima por Open-Meteo. Obras em acesso aberto do Cleveland Museum of Art e do The Met.</p>
+    </footer>
+  </body>
+</html>
